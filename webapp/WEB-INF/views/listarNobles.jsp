@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Lista de Regiones</title>
+<title>Lista de Nobles</title>
 
 <!--Termina jQuery DataTable-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -51,22 +51,20 @@
 			<tr>
 				<th>Id</th>
 				<th>Nombre</th>
-				<th>Clima</th>
-				<th>Mapa</th>
+				<th>Digno</th>
 				<th>Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${regiones }" var="region">
+			<c:forEach items="${nobles}" var="noble">
 				<tr>
-					<td>${region.id}</td>
-					<td>${region.nombre}</td>
-					<td>${region.clima}</td>
-					<td><a href="${region.mapa}">${region.mapa}</a></td>
-					<td><a href="editarRegion/${region.id}"
+					<td>${noble.id}</td>
+					<td>${noble.nombre}</td>
+					<td>${noble.digno}</td>
+					<td><a href="editarNoble/${noble.id}"
 						class="btn btn-success btn-sm" role="button" title="Edit"> <span
 							class="glyphicon glyphicon-pencil"></span>editar
-					</a> <a href="eliminarRegion/${region.id}"
+					</a> <a href="eliminarNoble/${noble.id}"
 						onclick='return confirm("¿Estas seguro?")'
 						class="btn btn-danger btn-sm" role="button" title="Eliminar">
 							<span class="glyphicon glyphicon-trash"></span>eliminar
