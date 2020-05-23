@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import JuegoDeTronos.model.Amorio;
 import JuegoDeTronos.model.Dragon;
 import JuegoDeTronos.model.Noble;
 import JuegoDeTronos.model.Plebeyo;
+import JuegoDeTronos.model.Producto;
 import JuegoDeTronos.model.Region;
+import JuegoDeTronos.service.IAmorioService;
 import JuegoDeTronos.service.IDragonService;
 import JuegoDeTronos.service.INobleService;
 import JuegoDeTronos.service.IPlebeyoService;
+import JuegoDeTronos.service.IProductoService;
 import JuegoDeTronos.service.IRegionService;
 
 @Controller
@@ -33,6 +37,10 @@ public class HomeController {
 	private IPlebeyoService pleb;
 	@Autowired
 	private IDragonService drago;
+	@Autowired
+	private IProductoService prod;
+	@Autowired
+	private IAmorioService amo;
 
 	@RequestMapping(value= "/", method = RequestMethod.GET)
 	public String HomePage() {
@@ -59,7 +67,7 @@ public class HomeController {
 		return "listarRegiones";
 	}
 	//Fin controladores para insertar regiones
-	
+
 	@RequestMapping(value = "/eliminarRegion/{id}")
 	public String eliminarRegion(@PathVariable("id") int id,Model modelo) {
 		regi.eliminar(id);
@@ -89,7 +97,7 @@ public class HomeController {
 		modelo.addAttribute("regiones",regiones);
 		return "redirect:/listarRegiones";
 	}
-	
+
 	@RequestMapping(value= "/listarNobles", method = RequestMethod.GET)
 	public String ListarNobles(Model modelo) {
 		List<Noble> nobles= nob.listarNobles();
@@ -119,7 +127,7 @@ public class HomeController {
 		return "listarNobles";
 	}
 	//Fin controladores para insertar nobles
-	
+
 	@RequestMapping(value = "/eliminarNoble/{id}")
 	public String eliminarNoble(@PathVariable("id") int id,Model modelo) {
 		nob.eliminar(id);
@@ -147,7 +155,7 @@ public class HomeController {
 		modelo.addAttribute("nobles",nobles);
 		return "redirect:/listarNobles";
 	}
-	
+
 	@RequestMapping(value= "/listarPlebeyos", method = RequestMethod.GET)
 	public String ListarPlebeyos(Model modelo) {
 		List<Plebeyo> plebeyos= pleb.listarPlebeyos();
@@ -168,7 +176,7 @@ public class HomeController {
 		return "listarPlebeyos";
 	}
 	//Fin controladores para insertar plebeyos
-	
+
 	@RequestMapping(value = "/eliminarPlebeyo/{id}")
 	public String eliminarPlebeyo(@PathVariable("id") int id,Model modelo) {
 		pleb.eliminar(id);
@@ -196,7 +204,7 @@ public class HomeController {
 		modelo.addAttribute("plebeyos",plebeyos);
 		return "redirect:/listarPlebeyos";
 	}
-	
+
 	@RequestMapping(value= "/listarDragones", method = RequestMethod.GET)
 	public String ListarDragones(Model modelo) {
 		List<Dragon> dragones= drago.listarDragones();
@@ -223,7 +231,7 @@ public class HomeController {
 		return "listarDragones";
 	}
 	//Fin controladores para insertar dragones
-	
+
 	@RequestMapping(value = "/eliminarDragon/{id}")
 	public String eliminarDragon(@PathVariable("id") int id,Model modelo) {
 		drago.eliminar(id);
@@ -255,11 +263,138 @@ public class HomeController {
 		eldato.setComidaFavorita(comidaFavorita);
 		Region region= regi.encontrarPorId(id_region);
 		eldato.setRegion(region);
-		
+
 		drago.guardar(eldato);
 		List<Dragon> dragones=drago.listarDragones();
 		modelo.addAttribute("dragones",dragones);
 		return "redirect:/listarDragones";
 	}
 	
+	@RequestMapping(value= "/listarProductos", method = RequestMethod.GET)
+	public String ListarProductos(Model modelo) {
+		List<Producto> productos= prod.listarProductos();
+		modelo.addAttribute("productos",productos);
+		return "listarProductos";
+	}
+	//Controladores para insertar productos
+	@RequestMapping(value = "/insertarProductos")
+	public String InsertarProductos(Model modelo) {
+		List<Region> regiones= regi.listarRegiones();
+		modelo.addAttribute("regiones",regiones);
+		return "insertarProductos";
+	}
+
+	@PostMapping(value = "/guardarProductos")
+	public String guardarProductos(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("region") int id_region) {
+		Region region= regi.encontrarPorId(id_region);
+		Producto producto= new Producto(id,nombre,region);
+		prod.guardar(producto);
+		List<Producto> productos= prod.listarProductos();
+		modelo.addAttribute("productos",productos);
+		return "listarProductos";
+	}
+	//Fin controladores para insertar productos
+	
+	@RequestMapping(value = "/eliminarProducto/{id}")
+	public String eliminarProductos(@PathVariable("id") int id,Model modelo) {
+		prod.eliminar(id);
+		List<Producto> productos=prod.listarProductos();
+		modelo.addAttribute("productos",productos);
+		return "redirect:/listarProductos";
+	}
+
+	@RequestMapping(value="/editarProducto/{id}")
+	public String editarProducto(@PathVariable("id") int id,Model modelo) {
+		Producto eldato=prod.encontrarPorId(id);
+		List<Region> region=regi.listarRegiones();
+		modelo.addAttribute("producto",eldato);
+		modelo.addAttribute("region", region);
+		return "editarProductos";
+	}
+
+	@PostMapping(value="/editarProducto/guardarNuevoProducto")
+	public String guardarNuevoProducto(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("region") int id_region)
+	{
+		Producto eldato=prod.encontrarPorId(id);
+		eldato.setNombre(nombre);
+		Region region=regi.encontrarPorId(id_region);
+		eldato.setRegion(region);
+		prod.guardar(eldato);
+		List<Producto> productos=prod.listarProductos();
+		modelo.addAttribute("productos",productos);
+		return "redirect:/listarProductos";
+	}
+	
+	@RequestMapping(value= "/listarAmorios", method = RequestMethod.GET)
+	public String ListarAmorios(Model modelo) {
+		List<Amorio> amorios= amo.listarAmorios();
+		modelo.addAttribute("amorios",amorios);
+		return "listarAmorios";
+	}
+	//Controladores para insertar productos
+	@RequestMapping(value = "/insertarAmorios")
+	public String InsertarAmorios(Model modelo) {
+		List<Plebeyo> plebeyos=pleb.listarPlebeyos();
+		List<Noble> nobles=nob.listarNobles();
+		List<Region> regiones=regi.listarRegiones();
+		modelo.addAttribute("plebeyos", plebeyos);
+		modelo.addAttribute("nobles", nobles);
+		modelo.addAttribute("regiones", regiones);
+		return "insertarAmorios";
+	}
+
+	@PostMapping(value = "/guardarAmorios")
+	public String guardarAmorios(Model modelo, @RequestParam("id") int id, @RequestParam("plebeyo") 
+	int id_plebeyo, @RequestParam("noble") int id_noble,@RequestParam("region") int id_region) {
+		Plebeyo plebeyo=pleb.encontrarPorId(id_plebeyo);
+		Noble noble= nob.encontrarPorId(id_noble);
+		Region region= regi.encontrarPorId(id_region);
+		Amorio amorio= new Amorio(id,plebeyo,noble,region);
+		amo.guardar(amorio);
+		List<Amorio> amorios= amo.listarAmorios();
+		modelo.addAttribute("amorios",amorios);
+		return "listarAmorios";
+	}
+	//Fin controladores para insertar productos
+	
+	@RequestMapping(value = "/eliminarAmorio/{id}")
+	public String eliminarAmorio(@PathVariable("id") int id,Model modelo) {
+		amo.eliminar(id);
+		List<Amorio> amorios=amo.listarAmorios();
+		modelo.addAttribute("amorios",amorios);
+		return "redirect:/listarAmorios";
+	}
+
+	@RequestMapping(value="/editarAmorio/{id}")
+	public String editarAmorio(@PathVariable("id") int id,Model modelo) {
+		Amorio eldato=amo.encontrarPorId(id);
+		modelo.addAttribute("amorio",eldato);
+		List<Plebeyo> plebeyos=pleb.listarPlebeyos();
+		List<Noble> nobles=nob.listarNobles();
+		List<Region> regiones=regi.listarRegiones();
+		modelo.addAttribute("plebeyos", plebeyos);
+		modelo.addAttribute("nobles", nobles);
+		modelo.addAttribute("regiones", regiones);
+		return "editarAmorios";
+	}
+
+	@PostMapping(value="/editarAmorio/guardarNuevoAmorio")
+	public String guardarNuevoAmorio(Model modelo, @RequestParam("id") int id, @RequestParam("plebeyo") 
+	int id_plebeyo, @RequestParam("noble") int id_noble, @RequestParam("region") int id_Region)
+	{
+		Amorio eldato=amo.encontrarPorId(id);
+		Plebeyo plebeyo=pleb.encontrarPorId(id_plebeyo);
+		Noble noble=nob.encontrarPorId(id_noble);
+		Region region=regi.encontrarPorId(id_Region);
+		eldato.setPlebeyo(plebeyo);
+		eldato.setNoble(noble);
+		eldato.setRegion(region);
+		amo.guardar(eldato);
+		List<Amorio> amorios=amo.listarAmorios();
+		modelo.addAttribute("amorios",amorios);
+		return "redirect:/listarAmorios";
+	}
+
 }

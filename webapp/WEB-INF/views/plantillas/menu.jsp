@@ -38,6 +38,21 @@
 						<a class="dropdown-item" href="insertarDragones">Insertar
 							Dragon</a>
 					</div></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">Producto</a>
+					<div class="dropdown-menu" aria-labelledby="dropdown07">
+						<a class="dropdown-item" href="listarProductos">Listar
+							Productos</a> <a class="dropdown-item" href="insertarProductos">Insertar
+							Productos</a>
+					</div></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">Amorio</a>
+					<div class="dropdown-menu" aria-labelledby="dropdown07">
+						<a class="dropdown-item" href="listarAmorios">Listar Amorios</a> <a
+							class="dropdown-item" href="insertarAmorios">Insertar Amorios</a>
+					</div></li>
 			</ul>
 
 		</div>
