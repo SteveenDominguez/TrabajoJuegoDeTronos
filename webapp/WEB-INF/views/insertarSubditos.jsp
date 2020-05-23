@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Editar</title>
+<title>formulario</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -39,42 +39,32 @@
 </head>
 <body>
 	<jsp:include page="plantillas/menu.jsp"></jsp:include>
-	<form action="guardarNuevoDragon" method="post">
+	<form action="guardarSubditos" method="post">
 		<div class="form-group">
-			<input type="text" style="visibility: hidden" class="form-control"
-				name="id" id="id" required="required" value="${dragon.id}" />
+			<label for="exampleInputText1">id</label> <input type="number"
+				class="form-control" id="id" name="id" placeholder="id" required>
 		</div>
 		<div class="form-group">
 			<label for="exampleInputText1">Nombre</label> <input type="text"
 				class="form-control" id="nombre" name="nombre" placeholder="nombre"
-				required value="${dragon.nombre}">
+				required>
 		</div>
 		<div class="form-group">
-			<label for="exampleInputText1">Edad</label> <input type="text"
-				class="form-control" id="edad" name="edad" placeholder="edad"
-				required value="${dragon.edad}">
+			<label for="exampleInputText1">Numero de Hijos</label> <input type="text"
+				class="form-control" id="numHijos" name="numHijos" placeholder="numHijos"
+				required>
 		</div>
 		<div class="form-group">
-			<label for="exampleInputText1">Fuerza</label> <input type="text"
-				class="form-control" id="fuerza" name="fuerza" placeholder="fuerza"
-				required value="${dragon.fuerza}">
-		</div>
+			<label for="exampleInputText1">Problema</label> <input type="text"
+				class="form-control" id="cargo" name="cargo" placeholder="cargo"
+				required>
 		<div class="form-group">
-			<label for="exampleInputText1">Color</label> <input type="text"
-				class="form-control" id="color" name="color" placeholder="color"
-				required value="${dragon.color}">
-		</div>
-		<div class="form-group">
-			<label for="exampleInputText1">Numero Asesinatos</label> <input
-				type="text" class="form-control" id="numAsesinatos"
-				name="numAsesinatos" placeholder="numAsesinatos" required
-				value="${dragon.numAsesinatos}">
-		</div>
-		<div class="form-group">
-			<label for="exampleInputText1">Comida Favorita</label> <input
-				type="text" class="form-control" id="comidaFavorita"
-				name="comidaFavorita" placeholder="comidaFavorita" required
-				value="${dragon.comidaFavorita}">
+			<label for="exampleInputText1">Padre</label> <select
+				name="region">
+				<c:forEach items="${subditos}" var="subdito">
+					<option value="${subdito.id }">${subdito.nombre}</option>
+				</c:forEach>
+			</select>
 		</div>
 		<div class="form-group">
 			<label for="exampleInputText1">Region</label> <select
@@ -84,9 +74,9 @@
 				</c:forEach>
 			</select>
 		</div>
+
 		<button type="submit" class="btn btn-primary">Guardar</button>
-		<a href="/JuegoDeTronos/" class="btn btn-success"><span
-			class="fa fa-undo"></span>Cancelar</a>
 	</form>
 	<jsp:include page="plantillas/footer.jsp"></jsp:include>
+</body>
 </html>

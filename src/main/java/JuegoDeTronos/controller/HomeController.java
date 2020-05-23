@@ -15,16 +15,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import JuegoDeTronos.model.Amorio;
 import JuegoDeTronos.model.Dragon;
+import JuegoDeTronos.model.Guerrero;
 import JuegoDeTronos.model.Noble;
 import JuegoDeTronos.model.Plebeyo;
 import JuegoDeTronos.model.Producto;
 import JuegoDeTronos.model.Region;
+import JuegoDeTronos.model.Subdito;
 import JuegoDeTronos.service.IAmorioService;
 import JuegoDeTronos.service.IDragonService;
+import JuegoDeTronos.service.IGuerreroService;
 import JuegoDeTronos.service.INobleService;
 import JuegoDeTronos.service.IPlebeyoService;
 import JuegoDeTronos.service.IProductoService;
 import JuegoDeTronos.service.IRegionService;
+import JuegoDeTronos.service.ISubditoService;
 
 @Controller
 public class HomeController {
@@ -38,9 +42,13 @@ public class HomeController {
 	@Autowired
 	private IDragonService drago;
 	@Autowired
+	private IGuerreroService guerre;
+	@Autowired
 	private IProductoService prod;
 	@Autowired
 	private IAmorioService amo;
+	@Autowired
+	private ISubditoService sub;
 
 	@RequestMapping(value= "/", method = RequestMethod.GET)
 	public String HomePage() {
@@ -270,6 +278,70 @@ public class HomeController {
 		return "redirect:/listarDragones";
 	}
 	
+	@RequestMapping(value= "/listarGuerreros", method = RequestMethod.GET)
+	public String ListarGuerreros(Model modelo) {
+		List<Guerrero> guerreros= guerre.listarGuerreros();
+		modelo.addAttribute("guerreros",guerreros);
+		return "listarGuerreros";
+	}
+	//Controladores para insertar guerreros
+	@RequestMapping(value = "/insertarGuerreros")
+	public String InsertarGuerreros(Model model) {
+		List<Region> regiones= regi.listarRegiones();
+		model.addAttribute("regiones",regiones);
+		return "insertarGuerreros";
+	}
+
+	@PostMapping(value = "/guardarGuerreros")
+	public String guardarGuerreros(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("especialidad") String especialidad, @RequestParam("cargo") String cargo, @RequestParam("numAsesinatos") String numAsesinatos,
+	@RequestParam("interes") String interes, @RequestParam("region") int id_region) {
+		Region region= regi.encontrarPorId(id_region);
+		Guerrero guerrero= new Guerrero(id, nombre, especialidad, cargo, numAsesinatos, interes, region);
+		guerre.guardar(guerrero);
+		List<Guerrero> guerreros= guerre.listarGuerreros();
+		modelo.addAttribute("guerreros",guerreros);
+		return "listarGuerreros";
+	}
+	//Fin controladores para insertar guerreros
+
+	@RequestMapping(value = "/eliminarGuerrero/{id}")
+	public String eliminarGuerrero(@PathVariable("id") int id,Model modelo) {
+		guerre.eliminar(id);
+		List<Guerrero>guerreros=guerre.listarGuerreros();
+		modelo.addAttribute("guerreros",guerreros);
+		return "redirect:/listarGuerreros";
+	}
+
+	@RequestMapping(value="/editarGuerrero/{id}")
+	public String editarGuerrero(@PathVariable("id") int id,Model modelo) {
+		List<Region> regiones= regi.listarRegiones();
+		modelo.addAttribute("regiones",regiones);
+		Guerrero eldato=guerre.encontrarPorId(id);
+		modelo.addAttribute("guerrero",eldato);
+		return "editarGuerreros";
+	}
+
+	@PostMapping(value="/editarGuerrero/guardarNuevoGuerrero")
+	public String guardarNuevoGuerrero(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("especialidad") String especialidad, @RequestParam("cargo") String cargo, @RequestParam("numAsesinatos") String numAsesinatos,
+	@RequestParam("interes") String interes, @RequestParam("region") int id_region)
+	{
+		Guerrero eldato=guerre.encontrarPorId(id);
+		eldato.setNombre(nombre);
+		eldato.setEspecialdiad(especialidad);
+		eldato.setCargo(cargo);
+		eldato.setNumAsesinatos(numAsesinatos);
+		eldato.setInteres(interes);
+		Region region= regi.encontrarPorId(id_region);
+		eldato.setRegion(region);
+
+		guerre.guardar(eldato);
+		List<Guerrero> guerreros=guerre.listarGuerreros();
+		modelo.addAttribute("guerreros",guerreros);
+		return "redirect:/listarGuerreros";
+	}
+	
 	@RequestMapping(value= "/listarProductos", method = RequestMethod.GET)
 	public String ListarProductos(Model modelo) {
 		List<Producto> productos= prod.listarProductos();
@@ -396,5 +468,74 @@ public class HomeController {
 		modelo.addAttribute("amorios",amorios);
 		return "redirect:/listarAmorios";
 	}
+	
+	@RequestMapping(value= "/listarSubditos", method = RequestMethod.GET)
+	public String ListarSubditos(Model modelo) {
+		List<Subdito> subditos= sub.listarSubditos();
+		modelo.addAttribute("subditos",subditos);
+		return "listarSubditos";
+	}
+	//Controladores para insertar subditos
+	@RequestMapping(value = "/insertarSubditos")
+	public String InsertarSubditos(Model model) {
+		List<Subdito> subditos= sub.listarSubditos();
+		model.addAttribute("subditos",subditos);
+		List<Region> regiones= regi.listarRegiones();
+		model.addAttribute("regiones",regiones);
+		return "insertarSubditos";
+	}
 
+	@PostMapping(value = "/guardarSubditos")
+	public String guardarSubditos(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("numHijos") int numHijos, @RequestParam("problema") String problema,
+	@RequestParam("padre") int id_padre, @RequestParam("region") int id_region) {
+		Subdito padre= sub.encontrarPorId(id_padre);
+		Region region= regi.encontrarPorId(id_region);
+		Subdito subdito= new Subdito(id, nombre, numHijos, problema, padre, region);
+		sub.guardar(subdito);
+		List<Subdito> subditos= sub.listarSubditos();
+		modelo.addAttribute("subditos",subditos);
+		return "listarSubditos";
+	}
+	//Fin controladores para insertar subditos
+
+	@RequestMapping(value = "/eliminarSubdito/{id}")
+	public String eliminarSubdito(@PathVariable("id") int id,Model modelo) {
+		sub.eliminar(id);
+		List<Subdito>subditos=sub.listarSubditos();
+		modelo.addAttribute("subditos",subditos);
+		return "redirect:/listarSubditos";
+	}
+
+	@RequestMapping(value="/editarSubdito/{id}")
+	public String editarSubdito(@PathVariable("id") int id,Model modelo) {
+		List<Subdito> subditos= sub.listarSubditos();
+		modelo.addAttribute("subditos",subditos);
+		List<Region> regiones= regi.listarRegiones();
+		modelo.addAttribute("regiones",regiones);
+		Subdito eldato=sub.encontrarPorId(id);
+		modelo.addAttribute("subdito",eldato);
+		return "editarSubditos";
+	}
+
+	@PostMapping(value="/editarSubdito/guardarNuevoSubdito")
+	public String guardarNuevoSubdito(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("numHijos") int numHijos, @RequestParam("problema") String problema,
+	@RequestParam("padre") int id_padre, @RequestParam("region") int id_region)
+	{
+		Subdito eldato=sub.encontrarPorId(id);
+		eldato.setNombre(nombre);
+		eldato.setNumHijos(numHijos);
+		eldato.setProblema(problema);
+		Subdito subdito= sub.encontrarPorId(id_padre);
+		eldato.setPadre(subdito);
+		Region region= regi.encontrarPorId(id_region);
+		eldato.setRegion(region);
+
+		sub.guardar(eldato);
+		List<Subdito> subditos=sub.listarSubditos();
+		modelo.addAttribute("subditos",subditos);
+		return "redirect:/listarSubditos";
+	}
+	
 }

@@ -35,8 +35,17 @@
 					aria-haspopup="true" aria-expanded="false">Dragones</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown07">
 						<a class="dropdown-item" href="listarDragones">Listar Dragones</a>
-						<a class="dropdown-item" href="insertarDragones">Insertar
+						<a class="dropdo
+						wn-item" href="insertarDragones">Insertar
 							Dragon</a>
+					</div></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">Guerreros</a>
+					<div class="dropdown-menu" aria-labelledby="dropdown07">
+						<a class="dropdown-item" href="listarGuerreros">Listar
+							Guerreros</a> <a class="dropdown-item" href="insertarGuerreros">Insertar
+							Guerreros</a>
 					</div></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
@@ -52,6 +61,14 @@
 					<div class="dropdown-menu" aria-labelledby="dropdown07">
 						<a class="dropdown-item" href="listarAmorios">Listar Amorios</a> <a
 							class="dropdown-item" href="insertarAmorios">Insertar Amorios</a>
+					</div></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">Subditos</a>
+					<div class="dropdown-menu" aria-labelledby="dropdown07">
+						<a class="dropdown-item" href="listarSubditos">Listar Subditos</a>
+						<a class="dropdown-item" href="insertarSubditos">Insertar
+							Subdito</a>
 					</div></li>
 			</ul>
 
