@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import JuegoDeTronos.model.Dragon;
 import JuegoDeTronos.model.Noble;
 import JuegoDeTronos.model.Plebeyo;
 import JuegoDeTronos.model.Region;
+import JuegoDeTronos.service.IDragonService;
 import JuegoDeTronos.service.INobleService;
 import JuegoDeTronos.service.IPlebeyoService;
 import JuegoDeTronos.service.IRegionService;
@@ -29,6 +31,8 @@ public class HomeController {
 	private INobleService nob;
 	@Autowired
 	private IPlebeyoService pleb;
+	@Autowired
+	private IDragonService drago;
 
 	@RequestMapping(value= "/", method = RequestMethod.GET)
 	public String HomePage() {
@@ -191,6 +195,71 @@ public class HomeController {
 		List<Plebeyo> plebeyos=pleb.listarPlebeyos();
 		modelo.addAttribute("plebeyos",plebeyos);
 		return "redirect:/listarPlebeyos";
+	}
+	
+	@RequestMapping(value= "/listarDragones", method = RequestMethod.GET)
+	public String ListarDragones(Model modelo) {
+		List<Dragon> dragones= drago.listarDragones();
+		modelo.addAttribute("dragones",dragones);
+		return "listarDragones";
+	}
+	//Controladores para insertar dragones
+	@RequestMapping(value = "/insertarDragones")
+	public String InsertarDragones(Model model) {
+		List<Region> regiones= regi.listarRegiones();
+		model.addAttribute("regiones",regiones);
+		return "insertarDragones";
+	}
+
+	@PostMapping(value = "/guardarDragones")
+	public String guardarDragones(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("edad") String edad, @RequestParam("fuerza") String fuerza, @RequestParam("color") String color, @RequestParam("numAsesinatos") String numAsesinatos,
+	@RequestParam("comidaFavorita") String comidaFavorita, @RequestParam("region") int id_region) {
+		Region region= regi.encontrarPorId(id_region);
+		Dragon dragon= new Dragon(id, nombre, edad, fuerza, color, numAsesinatos, comidaFavorita, region);
+		drago.guardar(dragon);
+		List<Dragon> dragones= drago.listarDragones();
+		modelo.addAttribute("dragones",dragones);
+		return "listarDragones";
+	}
+	//Fin controladores para insertar dragones
+	
+	@RequestMapping(value = "/eliminarDragon/{id}")
+	public String eliminarDragon(@PathVariable("id") int id,Model modelo) {
+		drago.eliminar(id);
+		List<Dragon>dragones=drago.listarDragones();
+		modelo.addAttribute("dragones",dragones);
+		return "redirect:/listarDragones";
+	}
+
+	@RequestMapping(value="/editarDragon/{id}")
+	public String editarDragon(@PathVariable("id") int id,Model modelo) {
+		List<Region> regiones= regi.listarRegiones();
+		modelo.addAttribute("regiones",regiones);
+		Dragon eldato=drago.encontrarPorId(id);
+		modelo.addAttribute("dragon",eldato);
+		return "editarDragones";
+	}
+
+	@PostMapping(value="/editarDragon/guardarNuevoDragon")
+	public String guardarNuevoDragon(Model modelo, @RequestParam("id") int id, @RequestParam("nombre") 
+	String nombre, @RequestParam("edad") String edad, @RequestParam("fuerza") String fuerza, @RequestParam("color") String color, @RequestParam("numAsesinatos") String numAsesinatos,
+	@RequestParam("comidaFavorita") String comidaFavorita, @RequestParam("region") int id_region)
+	{
+		Dragon eldato=drago.encontrarPorId(id);
+		eldato.setNombre(nombre);
+		eldato.setEdad(edad);
+		eldato.setFuerza(fuerza);
+		eldato.setColor(color);
+		eldato.setNumAsesinatos(numAsesinatos);
+		eldato.setComidaFavorita(comidaFavorita);
+		Region region= regi.encontrarPorId(id_region);
+		eldato.setRegion(region);
+		
+		drago.guardar(eldato);
+		List<Dragon> dragones=drago.listarDragones();
+		modelo.addAttribute("dragones",dragones);
+		return "redirect:/listarDragones";
 	}
 	
 }

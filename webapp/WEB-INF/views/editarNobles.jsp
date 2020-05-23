@@ -53,7 +53,7 @@
 				required value="${noble.digno}">
 		</div>
 		<button type="submit" class="btn btn-primary">Guardar</button>
-		<a href="JuegoDeTronos/" class="btn btn-success"><span
+		<a href="/JuegoDeTronos/" class="btn btn-success"><span
 			class="fa fa-undo"></span>Cancelar</a>
 	</form>
 	<jsp:include page="plantillas/footer.jsp"></jsp:include>
