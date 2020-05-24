@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.sun.istack.Nullable;
+
 
 
 @Entity
@@ -21,6 +23,7 @@ public class Subdito {
 	
 	@JoinColumn(name = "id_Padre", nullable = true )
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@Nullable
 	private Subdito padre;
 	
 	@JoinColumn(name = "id_Region", nullable = false)

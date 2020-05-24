@@ -56,11 +56,11 @@
 		</div>
 		<div class="form-group">
 			<label for="exampleInputText1">Problema</label> <input type="text"
-				class="form-control" id="cargo" name="cargo" placeholder="cargo"
+				class="form-control" id="problema" name="problema" placeholder="problema"
 				required>
 		<div class="form-group">
 			<label for="exampleInputText1">Padre</label> <select
-				name="region">
+				name="padre">
 				<c:forEach items="${subditos}" var="subdito">
 					<option value="${subdito.id }">${subdito.nombre}</option>
 				</c:forEach>
